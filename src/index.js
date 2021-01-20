@@ -1,9 +1,8 @@
-import Server from './server';
-import config from './config/configurations';
 import schema from './modules';
+import Server from './server';
+import configurations from './config/configurations';
 
-const server = new Server(config);
-
+const server = new Server(configurations);
 (() => {
-  server.bootstrap().setApollo(schema);
+  server.bootstrap().setupApollo(schema);
 })();
