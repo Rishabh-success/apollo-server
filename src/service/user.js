@@ -5,7 +5,7 @@ class User {
   }
 
   getAllUsers() {
-    return this.users.values;
+    return this.users.values();
   }
 
   createUser(user) {
