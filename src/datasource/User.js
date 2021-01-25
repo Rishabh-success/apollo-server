@@ -7,6 +7,10 @@ export default class UserAPI extends RESTDataSource {
     this.baseURL = `${configurations.serviceUrl}/api/user`;
   }
 
+  willSendRequest(request) {
+    request.headers.set('authorization', this.context.token);
+  }
+
   loginUser(payLoad) {
     return this.post('/login', payLoad);
   }
