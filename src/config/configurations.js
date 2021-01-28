@@ -1,7 +1,8 @@
-import * as dotenv from 'dotenv';
+import { config } from 'dotenv';
 
-const envVar = dotenv.config().parsed;
-const config = {
-  PORT: envVar.PORT,
-};
-export default config;
+config();
+const envVars = process.env;
+const configurations = Object.freeze({
+  port: envVars.PORT,
+});
+export default configurations;

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 import Express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 
@@ -9,43 +8,32 @@ class Server {
   }
 
   bootstrap() {
-    this.setupRoutes();
+    this.setupRouts();
     return this;
   }
 
-  setupRoutes() {
+  setupRouts() {
     const { app } = this;
-    app.get('/', (req, res) => {
-      res.send('Running Express app');
+    app.get('/health-check', (req, res) => {
+      res.send('I am ok');
     });
+    return this;
   }
 
-  async setApollo(schema) {
-    try {
-      const { app } = this;
-      this.Server = new ApolloServer({
-        ...schema,
-        onHealthCheck: () => new Promise((resolve) => {
-          resolve('I am OK');
-        }),
-      });
-      this.Server.applyMiddleware({ app });
-      this.run();
-    } catch (err) {
-      console.log(err);
-    }
+  setupApollo(schema) {
+    const { app } = this;
+    this.Server = new ApolloServer({
+      ...schema,
+    });
+    this.Server.applyMiddleware({ app });
+    this.run();
   }
 
   run() {
-    const { app, config: { PORT } } = this;
-    console.log(PORT);
-    app.listen(PORT, (err) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`App is runing on port ${PORT}`);
-      }
-      return this;
+    const { config: { port } } = this;
+    const { app } = this;
+    app.listen(port, () => {
+      console.log(`App is running on port ${port}`);
     });
   }
 }
