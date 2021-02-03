@@ -1,6 +1,8 @@
 import Express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { createServer } from 'http';
+import { UserAPI } from './datasource/index';
+// import TraineeAPI from './modules/trainee/query';
 
 class Server {
   constructor(config) {
@@ -25,6 +27,10 @@ class Server {
     const { app } = this;
     this.Server = new ApolloServer({
       ...schema,
+      dataSources: () => {
+        const userAPI = new UserAPI();
+        return { userAPI };
+      },
     });
     this.Server.applyMiddleware({ app });
     this.httpServer = createServer(app);
@@ -34,10 +40,13 @@ class Server {
 
   run() {
     const { config: { port } } = this;
+    // const { app } = this;
     this.httpServer.listen(port, (err) => {
       if (err) {
+        // eslint-disable-next-line no-console
         console.log(err);
       }
+      // eslint-disable-next-line no-console
       console.log(`App is running on port ${port}`);
     });
   }
