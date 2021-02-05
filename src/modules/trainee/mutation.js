@@ -1,27 +1,36 @@
-/* eslint-disable no-unused-vars */
-import userInstance from '../../service/user';
 import pubsub from '../pubsub';
 import constants from '../../lib/constant';
 
 export default {
-  createTrainee: (parent, args, context) => {
-    const { user } = args;
-    const addedUser = userInstance.createUser(user);
-    pubsub.publish(constants.subscriptions.TRAINEE_ADDED, { traineeAdded: addedUser });
-    return addedUser;
+  createTrainee: async (parent, args, context) => {
+    const { payLoad: { email, name, password } } = args;
+    const { dataSources: { traineeAPI } } = context;
+    const addedTrainee = await traineeAPI.createTrainee({ email, name, password });
+    const addedTraineeData = JSON.stringify(addedTrainee.data);
+    pubsub.publish(constants.subscriptions.TRAINEE_ADDED, { traineeAdded: addedTrainee.data });
+    return addedTraineeData;
   },
-  updateTrainee: (parent, args, context) => {
+  updateTrainee: async (parent, args, context) => {
     const {
-      id, role, name, email,
+      payLoad: {
+        id, role, name, email, password,
+      },
     } = args;
-    const updatedUser = userInstance.updateUser(id, name, email, role);
-    pubsub.publish(constants.subscriptions.TRAINEE_UPDATED, { traineeUpdated: updatedUser });
-    return updatedUser;
+    const { dataSources: { traineeAPI } } = context;
+    const updatedTrainee = await traineeAPI.updateTrainee({
+      id, name, email, role, password,
+    });
+    const updatedTraineeData = JSON.stringify(updatedTrainee.data);
+    // eslint-disable-next-line max-len
+    pubsub.publish(constants.subscriptions.TRAINEE_UPDATED, { traineeUpdated: updatedTrainee.data });
+    return updatedTraineeData;
   },
-  deleteTrainee: (parent, args, context) => {
-    const { id } = args;
-    const deletedID = userInstance.deleteUser(id);
-    pubsub.publish(constants.subscriptions.TRAINEE_DELETED, { traineeDeleted: deletedID });
-    return deletedID;
+  deleteTrainee: async (parent, args, context) => {
+    const { payLoad: { id } } = args;
+    const { dataSources: { traineeAPI } } = context;
+    const deletedID = await traineeAPI.deleteTrainee(id);
+    const deletedTraineeData = JSON.stringify(deletedID);
+    pubsub.publish(constants.subscriptions.TRAINEE_DELETED, { traineeDeleted: deletedTraineeData });
+    return deletedTraineeData;
   },
 };

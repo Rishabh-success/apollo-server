@@ -4,6 +4,7 @@
   "description": "Apollo Server Training",
   "main": "index.js",
   "dependencies": {
+    "apollo-datasource-rest": "^0.9.7",
     "apollo-server": "^2.19.2",
     "apollo-server-express": "^2.19.1",
     "context": "^1.1.0",
