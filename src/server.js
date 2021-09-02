@@ -1,8 +1,7 @@
 import Express from 'express';
 import { ApolloServer } from 'apollo-server-express';
 import { createServer } from 'http';
-import { UserAPI } from './datasource/index';
-// import TraineeAPI from './modules/trainee/query';
+import { UserAPI, TraineeAPI } from './datasource/index';
 
 class Server {
   constructor(config) {
@@ -29,7 +28,14 @@ class Server {
       ...schema,
       dataSources: () => {
         const userAPI = new UserAPI();
-        return { userAPI };
+        const traineeAPI = new TraineeAPI();
+        return { userAPI, traineeAPI };
+      },
+      context: ({ req }) => {
+        if (req) {
+          return { token: req.headers.authorization };
+        }
+        return {};
       },
     });
     this.Server.applyMiddleware({ app });
