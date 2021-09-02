@@ -1,6 +1,7 @@
-type User{
-    id:ID!
-    name:String!
-    email:String!
-    role: String!
+type User {
+    name: String!
+    email: String!
+    id: ID!
+    role: String
+    password: String!
 }
