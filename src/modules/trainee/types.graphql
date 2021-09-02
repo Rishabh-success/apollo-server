@@ -4,7 +4,6 @@ input CreateUserInput {
     password: String!
     role: String!
 } 
-
 input UpdateUserInput {
     name: String
     email: String
@@ -16,7 +15,6 @@ input UpdateUserInput {
 input DeleteUserInput {
     id: ID!
 }
-
 input LoginCredentials{
     email: String!
     password: String!
